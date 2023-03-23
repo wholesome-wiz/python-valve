@@ -4,7 +4,13 @@
 from __future__ import (absolute_import,
                         unicode_literals, print_function, division)
 
-import collections
+import sys
+
+if sys.version_info >= (2, 7):
+    from collections.abc import Mapping
+else:
+    from collections import Mapping
+
 import struct
 
 import six
@@ -376,7 +382,7 @@ class MessageDictField(MessageArrayField):
         return entries_dict, buffer
 
 
-class Message(collections.Mapping):
+class Message(Mapping):
 
     fields = ()
 
@@ -462,11 +468,12 @@ class InfoResponse(Message):
         ByteField("max_players"),
         ByteField("bot_count"),
         ServerTypeField("server_type"),
-        PlatformField("platform"),
-        ByteField("password_protected"),  # BooleanField
+        PlatformField("environment_type"),
+        ByteField("private_visibility"),  # BooleanField
         ByteField("vac_enabled"),  # BooleanField
-        StringField("version")
+        StringField("version"),
         # TODO: EDF
+        ByteField("extra_data_flag")
     )
 
 
